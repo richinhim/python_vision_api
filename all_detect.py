@@ -6,6 +6,8 @@ python all_detect.py labels ./resources/landmark.jpg
 python all_detect.py web ./resources/landmark.jpg
 python all_detect.py web-uri http://wheresgus.com/dog.JPG
 python all_detect.py faces-uri gs://your-bucket/file.jpg
+https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/vision/cloud-client/detect/detect.py
+
 """
 
 import argparse
@@ -219,8 +221,40 @@ def detect_web(path):
             print('Score      : {}'.format(entity.score))
             print('Description: {}'.format(entity.description))
 
-# def detect_web_uri(uri):
-#
+def detect_web_uri(uri):
+    client = vision.ImageAnnotatorClient()
+    image = types.Image()
+    image.source.image_uri = uri
+
+    response = client.web_detection(image=image)
+    notes = response.web_detection
+
+    if notes.pages_with_matching_images:
+        print('\n{} Pages with matching images retrieved')
+
+        for page in notes.pages_with_matching_images:
+            print('Url   : {}'.format(page.url))
+
+    if notes.full_matching_images:
+        print('\n{} Full Matches found: '.format(
+            len(notes.full_matching_images)))
+
+        for image in notes.full_matching_images:
+            print('Url  : {}'.format(image.url))
+
+    if notes.partial_matching_images:
+        print('\n{} Partial Matches found: '.format(
+            len(notes.partial_matching_images)))
+
+        for image in notes.partial_matching_images:
+            print('Url  : {}'.format(image.url))
+
+    if notes.web_entities:
+        print('\n{} Web entities found: '.format(len(notes.web_entities)))
+
+        for entity in notes.web_entities:
+            print('Score      : {}'.format(entity.score))
+            print('Description: {}'.format(entity.description))
 # def detect_crop_hints(path):
 #
 # def detect_crop_hints_uri(uri):
@@ -253,7 +287,7 @@ def run_local(args):
     #     detect_document(args.path)
 #
 #
-# def run_uri(args):
+def run_uri(args):
 #     if args.command == 'text-uri':
 #         detect_text_uri(args.uri)
 #     elif args.command == 'faces-uri':
@@ -268,8 +302,8 @@ def run_local(args):
 #         detect_safe_search_uri(args.uri)
 #     elif args.command == 'properties-uri':
 #         detect_properties_uri(args.uri)
-#     elif args.command == 'web-uri':
-#         detect_web_uri(args.uri)
+    if args.command == 'web-uri':
+        detect_web_uri(args.uri)
 #     elif args.command == 'crophints-uri':
 #         detect_crop_hints_uri(args.uri)
 #     elif args.command == 'document-uri':
@@ -326,8 +360,8 @@ if __name__ == '__main__':
     # web_parser = subparsers.add_parser('web', help=detect_web.__doc__)
     # web_parser.add_argument('path')
 
-    # web_uri_parser = subparsers.add_parser('web-uri', help=detect_web_uri.__doc__)
-    # web_uri_parser.add_argument('uri')
+    web_uri_parser = subparsers.add_parser('web-uri', help=detect_web_uri.__doc__)
+    web_uri_parser.add_argument('uri')
     #
     # crop_hints_parser = subparsers.add_parser('crophints', help=detect_crop_hints.__doc__)
     # crop_hints_parser.add_argument('path')
@@ -344,7 +378,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if ('uri' in args.command):
-        # run_uri(args)
-        pass
+        run_uri(args)
+        # pass
     else:
         run_local(args)
