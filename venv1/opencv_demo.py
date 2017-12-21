@@ -4,7 +4,7 @@
 # https://opencv.org/
 #
 # https://github.com/opencv/opencv/tree/master/data/haarcascades
-#
+# https://docs.opencv.org/3.3.0/d7/d8b/tutorial_py_face_detection.html
 # http://prologos.tistory.com/1
 #
 # * package 3°³ ¼³Ä¡
