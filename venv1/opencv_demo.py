@@ -16,11 +16,13 @@
 import numpy as np
 import cv2
 
-faceCascade = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
+faceCascade = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml') #Haar ºÐ·ù±â
 
 image = cv2.imread('./2016090911081720022.jpg')
 
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+#https://docs.opencv.org/2.4/modules/objdetect/doc/cascade_classification.html
 
 faces = faceCascade.detectMultiScale(
     gray,
